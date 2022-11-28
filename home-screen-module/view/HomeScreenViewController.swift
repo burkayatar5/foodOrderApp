@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import Firebase
 
 class HomeScreenViewController: UIViewController {
 
@@ -55,9 +56,15 @@ extension HomeScreenViewController: PresenterToViewHomeScreenProtocol {
             self.foodListCollectionView.reloadData()
         }
     }
+    func sendResultToView(message: String) {
+        let alertController = UIAlertController(title: "Uyarı", message: message, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        alertController.addAction(alertAction)
+        present(alertController, animated: true)
+    }
 }
 
-extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDataSource, PickerViewProtocol {
+extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDataSource, PickerViewProtocol, AddToCartProtocol {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return foodList.count
@@ -74,6 +81,7 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.pickerView.reloadAllComponents()
                 
         cell.pickerViewProtocol = self
+        cell.buttonProtocol = self
         cell.indexPath = indexPath
         
         cell.layer.borderColor = UIColor.lightGray.cgColor
@@ -105,4 +113,12 @@ extension HomeScreenViewController: UICollectionViewDelegate, UICollectionViewDa
         }
     }
     
+    func addToCartButtonPressed(button: UIButton, cell: FoodsCollectionViewCell) {
+        if let indexPath = foodListCollectionView.indexPath(for: cell) {
+            if let currentUser = Auth.auth().currentUser?.email {
+                let food = foodList[indexPath.row]
+                homeScreenPresenterObject?.addToBasket(food: food, orderCount: Int(cell.itemCountLabel.text!) ?? 1, user: currentUser)
+            }
+        }
+    }
 }

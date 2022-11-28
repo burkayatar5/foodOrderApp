@@ -11,6 +11,9 @@ protocol PickerViewProtocol {
     //MARK: - to open picker view when the button is pressed
     func pickerViewButtonPressed(pickerView: UIPickerView)
 }
+protocol AddToCartProtocol {
+    func addToCartButtonPressed(button: UIButton, cell: FoodsCollectionViewCell)
+}
 
 class FoodsCollectionViewCell: UICollectionViewCell {
     
@@ -19,6 +22,7 @@ class FoodsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var foodPriceLabel: UILabel!
     @IBOutlet weak var itemCountLabel: UILabel!
     @IBOutlet weak var pickerView: UIPickerView!
+    @IBOutlet weak var addButton: UIButton!
     
     let itemCount:[String] = ["1","2","3","4","5"]
     
@@ -29,6 +33,7 @@ class FoodsCollectionViewCell: UICollectionViewCell {
         pickerView.isHidden = true
     }
     
+    var buttonProtocol: AddToCartProtocol?
     var pickerViewProtocol: PickerViewProtocol?
     var indexPath: IndexPath?
     
@@ -38,6 +43,7 @@ class FoodsCollectionViewCell: UICollectionViewCell {
     
     // TODO: - Write Necessary Protocol
     @IBAction func addToCartButtonPressed(_ sender: Any) {
+        buttonProtocol?.addToCartButtonPressed(button: addButton!, cell: self)
     }
 }
 
@@ -56,7 +62,8 @@ extension FoodsCollectionViewCell: UIPickerViewDelegate, UIPickerViewDataSource{
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        itemCountLabel.text = itemCount[row]
+        let valueSelected = itemCount[row] as String
+        itemCountLabel.text = valueSelected
         pickerView.isHidden = true
     }
     

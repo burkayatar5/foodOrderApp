@@ -14,10 +14,16 @@ class HomeScreenPresenter : ViewToPresenterHomeScreenProtocol {
     func loadFoodList() {
         homeScreenInteractor?.getFoodList()
     }
+    func addToBasket(food: Yemekler, orderCount: Int, user: String) {
+        homeScreenInteractor?.addToBasket(food: food, orderCount: orderCount, user: user)
+    }
 }
 
 extension HomeScreenPresenter : InteractorToPresenterHomeScreenProtocol {
     func sendDataToPresenter(foodList: Array<Yemekler>) {
         homeScreenView?.sendDataToView(foodList: foodList)
+    }
+    func sendResultToPresenter(message: String) {
+        homeScreenView?.sendResultToView(message: message)
     }
 }
