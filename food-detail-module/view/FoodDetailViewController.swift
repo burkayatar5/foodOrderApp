@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class FoodDetailViewController: UIViewController {
 
@@ -16,9 +17,11 @@ class FoodDetailViewController: UIViewController {
     
     var totalPrice = 0
     var foodDetail: Yemekler?
+    var foodDetailPresenterObject: ViewToPresenterFoodDetailProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        FoodDetailRouter.createModule(ref: self)
         self.navigationItem.title = "Food Detail"
         
         if let food = foodDetail {
@@ -84,6 +87,9 @@ class FoodDetailViewController: UIViewController {
     }
     
     @IBAction func addToCartButtonPressed(_ sender: Any) {
+        if let currentUser = Auth.auth().currentUser?.email {
+            foodDetailPresenterObject?.addToBasket(food: foodDetail!, orderCount: Int(orderCountLabel.text!) ?? 1, user: currentUser)
+        }
     }
     
     /*
@@ -96,4 +102,12 @@ class FoodDetailViewController: UIViewController {
     }
     */
 
+}
+extension FoodDetailViewController: PresenterToViewFoodDetailProtocol {
+    func sendDataToView(message: String) {
+        let alertController = UIAlertController(title: "Uyarı", message: message, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        alertController.addAction(alertAction)
+        present(alertController, animated: true)
+    }
 }

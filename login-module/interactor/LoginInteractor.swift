@@ -14,11 +14,13 @@ class LoginInteractor: PresenterToInteractorLoginProtocol {
     
     func login(email: String, password: String) {
         if email != "" && password != ""{
-            Auth.auth().signIn(withEmail: email, password: password) { dataResult, error in
+            Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+                guard let strongSelf = self else { return }
                 if error != nil{
-                    self.loginPresenter?.sendDataToPresenter(result: false)
+                    //TODO: - application flow can be improved, rathen than using your result parameter find a way to use API's return values
+                    strongSelf.loginPresenter?.sendDataToPresenter(result: false)
                 } else {
-                    self.loginPresenter?.sendDataToPresenter(result: true)
+                    strongSelf.loginPresenter?.sendDataToPresenter(result: true)
                 }
             }
         }else{

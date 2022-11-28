@@ -52,6 +52,7 @@ class LoginViewController: UIViewController {
 extension LoginViewController: PresenterToViewLoginProtocol {
     func sendDataToView(result: Bool) {
         if result {
+            //TODO: -Refactor for repeated code
             let alertController = UIAlertController(title: "Success", message: "User logged in successfully", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "Ok", style: .cancel) { handler in
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -62,7 +63,7 @@ extension LoginViewController: PresenterToViewLoginProtocol {
             alertController.addAction(alertAction)
             present(alertController, animated: true)
         }else {
-            let alertController = UIAlertController(title: "Error", message: "Pls check your info", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Error", message: "Login failed! pls check your info and try again.", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "Dismiss", style: .cancel, handler: nil)
             alertController.addAction(alertAction)
             present(alertController, animated: true)
